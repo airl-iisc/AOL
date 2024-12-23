@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- indoor world spawn pose -->
+    <!-- <arg name="indoor" default="false"/>
+    <arg if="$(arg indoor)" name="initX" default="-7"/>
+    <arg if="$(arg indoor)" name="initY" default="-3"/>
+    <arg if="$(arg indoor)" name="initYaw" default="1.5708"/> -->
+
+    <!-- <arg name="indoor_dynamic" default="false"/>
+    <arg if="$(arg indoor_dynamic)" name="initX" default="-7"/>
+    <arg if="$(arg indoor_dynamic)" name="initY" default="-3"/>
+    <arg if="$(arg indoor_dynamic)" name="initYaw" default="1.5708"/> -->
+
+    <!-- office world spawn pose -->
+    <!-- <arg name="office" default="false"/>
+    <arg if="$(arg office)" name="initX" value="0"/>
+    <arg if="$(arg office)" name="initY" value="0"/>
+    <arg if="$(arg office)" name="initYaw" value="-1.5708"/> -->
+    
+    <!-- office world with non-static models for more realistic collision simulation -->
+    <!-- <arg name="office_full" default="true"/>
+    <arg if="$(arg office_full)" name="initX" value="0"/>
+    <arg if="$(arg office_full)" name="initY" value="0"/>
+    <arg if="$(arg office_full)" name="initYaw" value="-1.5708"/>  -->
+
+    <!-- TEEEEEEEEEEEHHHHHHHHHHEEEEEEEEEEEEEEEEEEEE -->
+
+
+    <group ns="robot1"> 
+    <arg name="robot_namespace" default="robot1"/>
+    <param name="tf_prefix" value="robot1_tf" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/> 
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model volta -param robot_description -x 10 -y 1 -z 0 -R 0 -P 0 -Y 0">
+    </node> 
+    <include file="$(find volta_control)/launch/control.launch" /> 
+    </group>
+
+    <group ns="robot2">
+    <arg name="robot_namespace" default="robot2"/>
+    <param name="tf_prefix" value="robot2_tf" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot2 -param robot_description -x 12 -y 1 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+    <include file="$(find volta_control)/launch/control.launch" />
+    </group> 
+    
+    <group ns="robot3">
+    <arg name="robot_namespace" default="robot3"/>
+    <param name="tf_prefix" value="robot3_tf" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot3 -param robot_description -x 10 -y 3 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+    <include file="$(find volta_control)/launch/control.launch" />
+    </group>
+
+    <group ns="robot4">
+    <arg name="robot_namespace" default="robot4"/>
+    <param name="tf_prefix" value="robot4_tf" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot4 -param robot_description -x 12 -y 3 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+    <include file="$(find volta_control)/launch/control.launch" /> 
+    </group>
+
+    <!-- <group ns="parent"> -->
+    <arg name="robot_namespace" default="/"/>
+    <!--<param name="tf_prefix" value="parent" /> -->
+
+    <arg name="wit_wt901c_imu" default="true"/>
+    <arg name="sick_lms151" default="false"/>
+    <arg name="velodyne_vlp16" default="true"/>
+
+    <arg name="model" default="$(find copernicus_description)/urdf/copernicus.xacro"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) imu_enabled:=$(arg wit_wt901c_imu) sick_lms151_enabled:=$(arg sick_lms151) velodyne_enabled:=$(arg velodyne_vlp16)"/>
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen"
+      args="-urdf -model parent -param robot_description -x 0 -y 2 -z 0.0 -R 0 -P 0 -Y 0">
+    </node>
+
+    <include file="$(find copernicus_control)/launch/control.launch" />
+    <include file="$(find copernicus_localization)/launch/localization.launch" />  
+
+         <node name="pointcloud_to_laserscan" pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node">
+            <param name="min_height" value="0.1"/>
+            <param name="max_height" value="1.0"/>
+            <param name="range_min" value="0.9"/>
+            <param name="range_max" value="130.0"/>
+            <param name="angle_min" value="-3.14"/>
+            <param name="angle_max" value="3.14"/>
+            <param name="target_frame" value="velodyne"/>
+            <param name="use_inf" value="true"/>
+
+            <remap from="cloud_in" to="velodyne_points"/>
+            <remap from="scan" to="scan_filtered"/>
+        </node>
+
+    <!-- </group> -->
+
+
+
+</launch>

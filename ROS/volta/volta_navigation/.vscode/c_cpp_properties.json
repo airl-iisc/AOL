@@ -1,0 +1,27 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/user/docker-ros/workspaces/multi_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/user/docker-ros/workspaces/multi_ws/src/copernicus/copernicus_teleoperator/include/**",
+        "/home/user/docker-ros/workspaces/multi_ws/src/realsense_gazebo_plugin/include/**",
+        "/home/user/docker-ros/workspaces/multi_ws/src/ros_pa1/include/**",
+        "/home/user/docker-ros/workspaces/multi_ws/src/tangent_planner/include/**",
+        "/home/user/docker-ros/workspaces/multi_ws/src/velodyne_gazebo_plugins/include/**",
+        "/home/user/docker-ros/workspaces/multi_ws/src/volta/volta_teleoperator/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

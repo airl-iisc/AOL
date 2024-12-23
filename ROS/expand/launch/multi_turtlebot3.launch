@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- <arg name="world_name" value="$(find expand)/worlds/corridor_rooms.world"/> -->
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>  
+
+  <group ns="robot1"> 
+    <arg name="robot_namespace" default="robot1"/>
+    <param name="tf_prefix" value="robot1" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot1 -x 10.5 -y -4.5 -z 0 -R 0 -P 0 -Y 0 -param robot_description" />
+  </group>
+
+  <group ns="robot2"> 
+    <arg name="robot_namespace" default="robot2"/>
+    <param name="tf_prefix" value="robot2" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot2 -x 9 -y -1 -z 0 -R 0 -P 0 -Y 0 -param robot_description" />
+  </group>
+    
+  <group ns="robot3"> 
+    <arg name="robot_namespace" default="robot3"/>
+    <param name="tf_prefix" value="robot3" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot3  -x 7.3 -y 4.5 -z 0 -R 0 -P 0 -Y 0 -param robot_description" />
+  </group>
+
+  <group ns="robot4"> 
+    <arg name="robot_namespace" default="robot4"/>
+    <param name="tf_prefix" value="robot4" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot4 -x 6.7 -y 7.3 -z 0 -R 0 -P 0 -Y 0 -param robot_description" />
+  </group>
+
+  <group ns="robot5"> 
+    <arg name="robot_namespace" default="robot5"/>
+    <param name="tf_prefix" value="robot5" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot5 -x 7 -y -5 -z 0 -R 0 -P 0 -Y 0 -param robot_description" />
+  </group>
+
+  <group ns="robot6"> 
+    <arg name="robot_namespace" default="robot6"/>
+    <param name="tf_prefix" value="robot6" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot6 -x 4.5 -y -3 -z 0 -R 0 -P 0 -Y 00 -param robot_description" />
+  </group>
+
+  <group ns="robot7"> 
+    <arg name="robot_namespace" default="robot7"/>
+    <param name="tf_prefix" value="robot7" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <param name="robot_description" command="$(find xacro)/xacro $(find turtlebot3_description)/urdf/turtlebot3_burger.urdf.xacro" />
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot7 -x 10 -y -3 -z 0 -R 0 -P 0 -Y 0 -param robot_description" />
+  </group>
+
+</launch>

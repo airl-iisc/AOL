@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<launch>
+
+    <arg name = "dest_x" default = "6"/>
+    <arg name = "dest_y" default = "16"/>
+    <param name = "dest_pos_x" value="$(arg dest_x)"/>
+    <param name = "dest_pos_y" value="$(arg dest_y)"/>
+
+    <node pkg="multi_controller" type="go_to_pos.py" name="go_to_pos" output="screen"/>
+    <node pkg="multi_controller" type="bug0.py" name="wallfollow_plus_gotopos" output="screen"/>
+    
+</launch>
+

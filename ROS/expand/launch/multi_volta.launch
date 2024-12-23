@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+<launch>
+<!-- Gazebo Origin -->
+<!-- 
+  <group ns="/robot4/map_merge">
+    <param name="init_pose_x" value="6.69"/>
+    <param name="init_pose_y" value="7.3"/>
+    <param name="init_pose_z" value="0.0"/>
+    <param name="init_pose_yaw" value="0.00"/>
+  </group>
+  <group ns="/robot3/map_merge">
+    <param name="init_pose_x" value="7.27"/>
+    <param name="init_pose_y" value="4.5"/>
+    <param name="init_pose_z" value="0.0"/>
+    <param name="init_pose_yaw" value="0"/>
+  </group>
+  <group ns="/robot2/map_merge">
+    <param name="init_pose_x" value="8.97"/>
+    <param name="init_pose_y" value="-1"/>
+    <param name="init_pose_z" value="0.0"/>
+    <param name="init_pose_yaw" value="0"/>
+  </group>
+  <group ns="/robot1/map_merge">
+    <param name="init_pose_x" value="10.48039"/>
+    <param name="init_pose_y" value="-4.5"/>
+    <param name="init_pose_z" value="0.0"/>
+    <param name="init_pose_yaw" value="0"/>
+  </group> -->
+
+  <!-- Robot1 Parent as Origin -->
+  <arg name="wit_wt901c_imu" default="true"/>
+  <arg name="lidar_test" default="true"/>
+  <arg name="velodyne_vlp16" default="false"/>
+
+  <arg name="r1x" value="0.0" />
+  <arg name="r1y" value="0.0" />
+  <arg name="r1z" value="0.0" />
+
+  <arg name="r2x" value="-1.51038" />
+  <arg name="r2y" value="3.5" />
+  <arg name="r2z" value="0.0" />
+
+  <arg name="r3x" value="-3.21039" />
+  <arg name="r3y" value="9" />
+  <arg name="r3z" value="0.0" />
+
+  <arg name="r4x" value="-3.7903" />
+  <arg name="r4y" value="11.8" />
+  <arg name="r4z" value="0.0" />
+
+  <param name="number_of_robots" value="4"/>
+
+<!-- 
+  <group ns="/robot4/map_merge">
+    <param name="init_pose_x" value="$(arg r4x)"/>
+    <param name="init_pose_y" value="$(arg r4y)"/>
+    <param name="init_pose_z" value="$(arg r4z)"/>
+    <param name="init_pose_yaw" value="0.00"/>
+  </group>
+  <group ns="/robot3/map_merge">
+    <param name="init_pose_x" value="$(arg r3x)"/>
+    <param name="init_pose_y" value="$(arg r3y)"/>
+    <param name="init_pose_z" value="$(arg r3z)"/>
+    <param name="init_pose_yaw" value="0"/>
+  </group>
+  <group ns="/robot2/map_merge">
+    <param name="init_pose_x" value="$(arg r2x)"/>
+    <param name="init_pose_y" value="$(arg r2y)"/>
+    <param name="init_pose_z" value="$(arg r2z)"/>
+    <param name="init_pose_yaw" value="0"/>
+  </group>
+  <group ns="/robot1/map_merge">
+    <param name="init_pose_x" value="$(arg r1x)"/>
+    <param name="init_pose_y" value="$(arg r1y)"/>
+    <param name="init_pose_z" value="$(arg r1z)"/>
+    <param name="init_pose_yaw" value="0"/>
+  </group> -->
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+      <!-- <arg name="world_name" value="$(find expand)/worlds/corridor_rooms.world"/> -->
+      <arg name="paused" value="false"/>
+      <arg name="use_sim_time" value="true"/>
+      <arg name="gui" value="true"/>
+      <arg name="headless" value="false"/>
+      <arg name="debug" value="false"/>
+    </include>  
+    
+    
+    <group ns="robot1">
+    <arg name="robot_namespace" default="robot1"/>
+    <param name="tf_prefix" value="robot1" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find copernicus_description)/urdf/copernicus.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) imu_enabled:=$(arg wit_wt901c_imu) test_lidar_enabled:=$(arg lidar_test) velodyne_enabled:=$(arg velodyne_vlp16)"/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" 
+      args="-urdf -model robot1 -param robot_description -x 2.858040 -y -0.029685 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+    <include file="$(find copernicus_control)/launch/control.launch">
+        <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find copernicus_navigation)/launch/navigation2.launch">
+        <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>  
+    </group> 
+
+    <!-- <group ns="robot1"> 
+    <arg name="robot_namespace" default="robot1"/>
+    <param name="tf_prefix" value="robot1" /> 
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /> 
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/> 
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace)"/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model volta -param robot_description -x 10.5 -y -4.5 -z 0 -R 0 -P 0 -Y 0">
+    </node> 
+
+    <include file="$(find volta_control)/launch/control.launch" >
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find volta_navigation)/launch/navigation2.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+
+    </group> -->
+
+    <group ns="robot2">
+    <arg name="robot_namespace" default="robot2"/>
+    <param name="tf_prefix" value="robot2" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot2 -param robot_description -x 1.095354 -y 1.488496 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+
+    <include file="$(find volta_control)/launch/control.launch" >
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find volta_navigation)/launch/navigation2.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+
+    </group> 
+    
+    <group ns="robot3">
+    <arg name="robot_namespace" default="robot3"/>
+    <param name="tf_prefix" value="robot3" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot3 -param robot_description -x -0.904977 -y -0.032046 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+
+    <include file="$(find volta_control)/launch/control.launch" >
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find volta_navigation)/launch/navigation2.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+
+    </group>
+
+    <group ns="robot4">
+    <arg name="robot_namespace" default="robot4"/>
+    <param name="tf_prefix" value="robot4" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot4 -param robot_description -x -0.916474 -y 1.504146 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+
+    <include file="$(find volta_control)/launch/control.launch" >
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find volta_navigation)/launch/navigation2.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    
+    </group>
+
+    <group ns="robot5">
+    <arg name="robot_namespace" default="robot5"/>
+    <param name="tf_prefix" value="robot5" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot5 -param robot_description -x 1.063800 -y -1.507870 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+
+    <include file="$(find volta_control)/launch/control.launch" >
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find volta_navigation)/launch/navigation2.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+
+    </group> 
+
+    <group ns="robot6">
+    <arg name="robot_namespace" default="robot6"/>
+    <param name="tf_prefix" value="robot6" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot6 -param robot_description -x 1.108737 -y -0.051923 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+
+    <include file="$(find volta_control)/launch/control.launch" >
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find volta_navigation)/launch/navigation2.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+
+    </group> 
+
+    <group ns="robot7">
+    <arg name="robot_namespace" default="robot7"/>
+    <param name="tf_prefix" value="robot7" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+    <arg name="model" default="$(find volta_description)/urdf/volta.xacro"/>
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model) robot_namespace:=$(arg robot_namespace) "/> 
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model" respawn="false" output="screen" args="-urdf -model robot7 -param robot_description -x -0.879732 -y -1.495313 -z 0 -R 0 -P 0 -Y 0">
+    </node>
+
+    <include file="$(find volta_control)/launch/control.launch" >
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+    <include file="$(find volta_navigation)/launch/navigation2.launch">
+    <arg name="robot_namespace" value="$(arg robot_namespace)"/>
+    </include>
+
+    </group>
+
+
+</launch>
